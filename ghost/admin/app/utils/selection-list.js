@@ -6,6 +6,8 @@ export default class SelectionList {
     @tracked lastSelectedId = null;
     @tracked lastShiftSelectionGroup = new Set();
 
+    enabled = true;
+
     infinityModel;
 
     constructor(infinityModel) {
@@ -65,8 +67,19 @@ export default class SelectionList {
         return arr;
     }
 
+    get first() {
+        return this.availableModels[0];
+    }
+
     get isSingle() {
         return this.selectedIds.size === 1 && !this.inverted;
+    }
+
+    get count() {
+        if (!this.inverted) {
+            return this.selectedIds.size;
+        }
+        return Math.max((this.infinityModel.meta?.pagination?.total ?? 0) - this.selectedIds.size, 1);
     }
 
     isSelected(id) {
